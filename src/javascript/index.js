@@ -35,22 +35,22 @@ export const gameBoard = (shipPlayer) => {
     let tooBig = false;
     const shipPlacement = [3,0];
     if(shipPlayer.direction == 'vertical'){
-        for(let j = shipPlacement[0]; j < shipPlayer.length; j++){
-            if(j < board.length){
-                board[j][shipPlacement[1]] = 1;
-            }else {
+        for(let j = 2; j < shipPlayer.length; j++){
+            if(j > board.length-1){// нужно попробовать отнимать длину
                 tooBig = true;
-            }    
-        } 
+                console.log(true)
+                j = shipPlayer.length;
+            }else{
+                board[j][shipPlacement[1]] = 1;
+                }
+            }  
     }else {
         for(let k = shipPlacement[1]; k < shipPlayer.length; k++){
             board[shipPlacement[0]][k] = 1;    
         }
     }
 
-    const showBoard = () => {
-        console.log(board)
-    }
+    const getTooBig = () => {return tooBig};
 
-    return {board, get tooBig(){return tooBig}}
+    return {board, getTooBig}
 }

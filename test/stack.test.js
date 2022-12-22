@@ -18,10 +18,10 @@ describe('Ship', () => {
 describe('GameBoard', () => {
     const black = ship(4,0,false, 'vertical');
     const board1 = gameBoard(black);
-    // test('placement',() => {
-    //     expect(board1.board).toStrictEqual([[1, 'x', 'x', 'x'],[1, 'x', 'x', 'x'],[1, 'x', 'x', 'x'],[1, 'x', 'x', 'x']])
-    // })
+    test('placement',() => {
+        expect(board1.board).toStrictEqual([['x', 'x', 'x', 'x'],['x', 'x', 'x', 'x'],[1, 'x', 'x', 'x'],[1, 'x', 'x', 'x']])
+    })
     test('inapropriate placing', () => {
-        expect(board1.tooBig).toBe(false)
+        expect(board1.getTooBig()).toBe(true)
     })
 })
