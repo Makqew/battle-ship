@@ -10,18 +10,50 @@ describe('Ship', () => {
         white.hit()
         expect(white.sunk).toBe(true)
     })
-    test('Placement', () => {
-        expect(white.shipData).toStrictEqual([[1],[1],[1],[1]])
+})
+
+describe('GameBoard placement', () => {
+    const player1 = ship(4,0,false, 'vertical');
+    const board1 = gameBoard(player1, [2,0]);
+
+
+    test('Placement vertical ship',() => {
+        expect(board1.board).toStrictEqual([['o', 'o', 'o', 'o'],['o', 'o', 'o', 'o'],[1, 'o', 'o', 'o'],[1, 'o', 'o', 'o']])
+    })
+    test('Anappropriate placing of vertical ship', () => {
+        expect(board1.getTooBig()).toBe(true)
+    })
+
+    const player2 = ship(2,0,false, 'horizontal');
+    const board2 = gameBoard(player2, [2,0]);
+    test('Placement horizontal ship',() => {
+        expect(board2.board).toStrictEqual([['o', 'o', 'o', 'o'],['o', 'o', 'o', 'o'],[1, 1, 'o', 'o'],['o', 'o', 'o', 'o']])
+    })
+    test('inappropriate placing of horizontal ship', () => {
+        expect(board2.getTooBig()).toBe(false)
     })
 })
 
-describe('GameBoard', () => {
-    const black = ship(4,0,false, 'vertical');
-    const board1 = gameBoard(black);
-    test('placement',() => {
-        expect(board1.board).toStrictEqual([['x', 'x', 'x', 'x'],['x', 'x', 'x', 'x'],[1, 'x', 'x', 'x'],[1, 'x', 'x', 'x']])
+describe('GameBoard receiving attack for the first time', () => {
+    const player2 = ship(2,0,false, 'horizontal');
+    const board2 = gameBoard(player2, [2,0]);
+    
+    board2.receiveAttack(2,3)
+    test('Adding coordinates to history', () => {
+        expect(board2.history).toStrictEqual([2,3])
     })
-    test('inapropriate placing', () => {
-        expect(board1.getTooBig()).toBe(true)
+    test('Miss',() => {
+        expect(board2.board).toStrictEqual([['o', 'o', 'o', 'o'],['o', 'o', 'o', 'o'],[1, 1, 'o', 'x'],['o', 'o', 'o', 'o']])
+    })
+})
+
+describe('GameBoard receiving attack for the multiple time', () => {
+    const player2 = ship(2,0,false, 'horizontal');
+    const board2 = gameBoard(player2, [2,0]);
+    
+    board2.receiveAttack(2,3)
+    board2.receiveAttack(2,1)
+    test('Hit!',() => {
+        expect(board2.board).toStrictEqual([['o', 'o', 'o', 'o'],['o', 'o', 'o', 'o'],[1, 'x', 'o', 'x'],['o', 'o', 'o', 'o']])
     })
 })
