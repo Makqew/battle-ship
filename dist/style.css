@@ -1,0 +1,57 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+main{
+    height: 100vh;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    align-items: center;
+}
+#game{
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: 48px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#player1, #computer, #history {
+    height: 100%;
+}
+
+.row, .coordinate-chars{
+    display: flex;
+    flex-direction: row;
+}
+.char{
+    width: 100px;
+    padding: 4px 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+.coordinate-chars .char:first-child, .row .char{
+    width: 20px;
+}
+
+.cell{
+    box-sizing: border-box;
+    width: 100px;
+    height: 100px;
+    background-color: #000000;
+    border: 1px solid white;
+}
+
+
+#history {
+    width: 20%;
+}
+
+.coordinates{
+    word-break: break-all;
+}

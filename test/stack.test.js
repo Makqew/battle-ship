@@ -1,4 +1,8 @@
-import {gameBoard, ship} from '../src/javascript/index'
+import {gameBoard} from '../src/javascript/gameBoard'
+import {ship} from '../src/javascript/ship'
+import {player} from '../src/javascript/player'
+
+
 
 describe('Ship', () => {
     const white = ship(4, 2, false, 'vertical')
@@ -53,7 +57,13 @@ describe('GameBoard receiving attack for the multiple time', () => {
     
     board2.receiveAttack(2,3)
     board2.receiveAttack(2,1)
+    board2.receiveAttack(2,0)
     test('Hit!',() => {
-        expect(board2.board).toStrictEqual([['o', 'o', 'o', 'o'],['o', 'o', 'o', 'o'],[1, 'x', 'o', 'x'],['o', 'o', 'o', 'o']])
+        expect(board2.board).toStrictEqual([['o', 'o', 'o', 'o'],['o', 'o', 'o', 'o'],['x', 'x', 'o', 'x'],['o', 'o', 'o', 'o']])
+        expect(player2.numOfHits).toBe(2);
+    })
+    test('Is ship sunk?', () => {
+        expect(player2.sunk).toBe(true)
     })
 })
+
