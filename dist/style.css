@@ -21,7 +21,7 @@ main{
     align-items: center;
 }
 
-#player1, #computer, #history {
+#player, #computer, #history {
     height: 100%;
 }
 
