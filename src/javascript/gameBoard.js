@@ -15,7 +15,7 @@ export const gameBoard = (shipPlayer, position) => {
 
             if(board[j]?.[k] != null){
             // the operator ?. checks if board[j] is not null(if not it will check the board[j][k], the next level of arr)
-            // if it so the it will return undefined or null
+            // if it so then it will return undefined or null
                 board[j][k] = 1;
             }
             else{

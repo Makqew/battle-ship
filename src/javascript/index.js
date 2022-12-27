@@ -29,17 +29,22 @@ let ship1 = ship(3,0,false, 'vertical')
 let firstPlayerBoard = gameBoard(ship1, [3,0])
 let playerBoard = document.getElementById('player');
 let boardRow = playerBoard.getElementsByClassName('row');
+function hoverBorder(event){//Work on this
+    let currentPosition = Array.from(cells).indexOf(event.currentTarget);
+    let cellsArr = Array.from(cells);
+    for(let i = 0; i < ship1.numOfCells; i++){
+        cellsArr[currentPosition].style.border = "1px solid red";
+        currentPosition += 1;
+    }
+}
 for(let row of boardRow){
     let cells = row.getElementsByClassName('cell');
     for(let elem of cells){
         elem.addEventListener('mouseover', (event) => {
-            // event.currentTarget.style.backgroundColor = "red"
-            // console.log(Array.from(boardRow).indexOf(event.currentTarget.parentNode)) // position of row
-            // console.log(Array.from(cells).indexOf(event.currentTarget)) // position of column
             let currentPosition = Array.from(cells).indexOf(event.currentTarget);
             let cellsArr = Array.from(cells);
             for(let i = 0; i < ship1.numOfCells; i++){
-                cellsArr[currentPosition].style.backgroundColor = "red";
+                cellsArr[currentPosition].style.border = "1px solid red";
                 currentPosition += 1;
             }
         })
@@ -47,10 +52,20 @@ for(let row of boardRow){
             let currentPosition = Array.from(cells).indexOf(event.currentTarget);
             let cellsArr = Array.from(cells);
             for(let i = 0; i < ship1.numOfCells; i++){
-                cellsArr[currentPosition].style.backgroundColor = "black";
+                cellsArr[currentPosition].style.border = "1px solid white";
                 currentPosition += 1;
             }
             
+        })
+        elem.addEventListener('click', (event)=> {
+            let currentPosition = Array.from(cells).indexOf(event.currentTarget);
+            let cellsArr = Array.from(cells);
+            console.log('hi')
+            for(let i = 0; i < ship1.numOfCells; i++){
+                cellsArr[currentPosition].style.backgroundColor = "red";
+                currentPosition += 1;
+            }
+            elem.removeEventListener
         })
     }
 }
