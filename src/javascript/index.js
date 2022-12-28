@@ -29,43 +29,52 @@ let ship1 = ship(3,0,false, 'vertical')
 let firstPlayerBoard = gameBoard(ship1, [3,0])
 let playerBoard = document.getElementById('player');
 let boardRow = playerBoard.getElementsByClassName('row');
-function hoverBorder(event){//Work on this
-    let currentPosition = Array.from(cells).indexOf(event.currentTarget);
-    let cellsArr = Array.from(cells);
-    for(let i = 0; i < ship1.numOfCells; i++){
-        cellsArr[currentPosition].style.border = "1px solid red";
-        currentPosition += 1;
-    }
+
+const borderOver = (cellElement) => {
+    return function (event){
+        let currentPosition = cellElement.indexOf(event.currentTarget);
+        for(let i = 0; i < ship1.numOfCells; i++){
+            cellElement[currentPosition].style.border = "1px solid red";
+            currentPosition += 1;
+        }
+    }   
 }
+
+function borderOut(cellElement){
+    return function (event){
+        let currentPosition = cellElement.indexOf(event.currentTarget);
+        for(let i = 0; i < ship1.numOfCells; i++){
+            cellElement[currentPosition].style.border = "1px solid white";
+            currentPosition += 1;
+        }
+    }   
+}
+
+
+
 for(let row of boardRow){
     let cells = row.getElementsByClassName('cell');
     for(let elem of cells){
-        elem.addEventListener('mouseover', (event) => {
-            let currentPosition = Array.from(cells).indexOf(event.currentTarget);
-            let cellsArr = Array.from(cells);
-            for(let i = 0; i < ship1.numOfCells; i++){
-                cellsArr[currentPosition].style.border = "1px solid red";
-                currentPosition += 1;
+        let cellsArr = Array.from(cells);
+        elem.addEventListener('mouseover', borderOver(cellsArr))
+        elem.addEventListener('mouseout', borderOut(cellsArr))
+        elem.addEventListener('click', fillBorder(cellsArr))
+    }
+}
+
+function fillBorder(cellElement){
+    return function(event){
+        let currentPosition = cellElement.indexOf(event.currentTarget);
+        for(let i = 0; i < ship1.numOfCells; i++){
+            cellElement[currentPosition].style.backgroundColor = "red";
+            currentPosition += 1;
+        }
+        let boardRow = playerBoard.getElementsByClassName('row');
+        for(let row of boardRow){
+            let cells = row.getElementsByClassName('cell');
+            for(let elem of cells){
+                elem.removeEventListener('mouseOver', borderOver, true)
             }
-        })
-        elem.addEventListener('mouseout', (event) => {
-            let currentPosition = Array.from(cells).indexOf(event.currentTarget);
-            let cellsArr = Array.from(cells);
-            for(let i = 0; i < ship1.numOfCells; i++){
-                cellsArr[currentPosition].style.border = "1px solid white";
-                currentPosition += 1;
             }
-            
-        })
-        elem.addEventListener('click', (event)=> {
-            let currentPosition = Array.from(cells).indexOf(event.currentTarget);
-            let cellsArr = Array.from(cells);
-            console.log('hi')
-            for(let i = 0; i < ship1.numOfCells; i++){
-                cellsArr[currentPosition].style.backgroundColor = "red";
-                currentPosition += 1;
-            }
-            elem.removeEventListener
-        })
     }
 }
