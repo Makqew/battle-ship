@@ -56,9 +56,12 @@ for(let row of boardRow){
     let cells = row.getElementsByClassName('cell');
     for(let elem of cells){
         let cellsArr = Array.from(cells);
-        elem.addEventListener('mouseover', borderOver(cellsArr))
-        elem.addEventListener('mouseout', borderOut(cellsArr))
-        elem.addEventListener('click', fillBorder(cellsArr))
+        let borderFunc = borderOver(cellsArr);
+        elem.addEventListener('mouseover', borderFunc);
+        elem.removeEventListener('mouseover', borderFunc);
+
+        elem.addEventListener('mouseout', borderOut(cellsArr));
+        elem.addEventListener('click', fillBorder(cellsArr));
     }
 }
 
@@ -69,12 +72,13 @@ function fillBorder(cellElement){
             cellElement[currentPosition].style.backgroundColor = "red";
             currentPosition += 1;
         }
-        let boardRow = playerBoard.getElementsByClassName('row');
         for(let row of boardRow){
             let cells = row.getElementsByClassName('cell');
             for(let elem of cells){
-                elem.removeEventListener('mouseOver', borderOver, true)
+                // elem.removeEventListener('mouseover', borderOver, true)
+                // elem.addEventListener('mouseout', borderOut(cellsArr))
+                // elem.addEventListener('click', fillBorder(cellsArr))
             }
-            }
+        }
     }
 }
