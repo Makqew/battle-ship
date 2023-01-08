@@ -51,34 +51,41 @@ function borderOut(cellElement){
 }
 
 
-
 for(let row of boardRow){
     let cells = row.getElementsByClassName('cell');
     for(let elem of cells){
         let cellsArr = Array.from(cells);
         let borderFunc = borderOver(cellsArr);
+        // let newFunc = clickButton(cells, borderFunc);
+
         elem.addEventListener('mouseover', borderFunc);
-        elem.removeEventListener('mouseover', borderFunc);
+        // elem.removeEventListener('mouseover', borderFunc);
 
         elem.addEventListener('mouseout', borderOut(cellsArr));
         elem.addEventListener('click', fillBorder(cellsArr));
+        elem.addEventListener('click', clickButton(cells, borderFunc));
     }
 }
 
-function fillBorder(cellElement){
+function fillBorder(cells){
     return function(event){
-        let currentPosition = cellElement.indexOf(event.currentTarget);
+        let currentPosition = cells.indexOf(event.currentTarget);
         for(let i = 0; i < ship1.numOfCells; i++){
-            cellElement[currentPosition].style.backgroundColor = "red";
+            cells[currentPosition].style.backgroundColor = "red";
             currentPosition += 1;
         }
-        for(let row of boardRow){
-            let cells = row.getElementsByClassName('cell');
-            for(let elem of cells){
-                // elem.removeEventListener('mouseover', borderOver, true)
-                // elem.addEventListener('mouseout', borderOut(cellsArr))
-                // elem.addEventListener('click', fillBorder(cellsArr))
-            }
-        }
     }
+}
+
+function clickButton(divArr, element){
+        // for(let elem of divArr){
+        //     console.log(elem)
+        //     elem.removeEventListener('mouseover', element)
+        // }
+        // for(let row of boardRow){
+            let cells = document.getElementsByClassName('cell');
+            let cellsArr = Array.from(cells)
+            cellsArr.map(elem => elem.removeEventListener('mouseover', element))
+            return cellsArr
+        // }
 }
