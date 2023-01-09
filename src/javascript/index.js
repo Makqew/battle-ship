@@ -26,60 +26,122 @@ import {player} from './player'
 let ship1 = ship(3,0,false, 'vertical')
 // let player1 = player(nameOfPlayer,ship1,1)
 
-let firstPlayerBoard = gameBoard(ship1, [3,0])
 let playerBoard = document.getElementById('player');
 let boardRow = playerBoard.getElementsByClassName('row');
 
-const borderOver = (cellElement) => {
+const borderOver = (cellElement, rowElement) => {
     return function (event){
-        let currentPosition = cellElement.indexOf(event.currentTarget);
-        for(let i = 0; i < ship1.numOfCells; i++){
-            cellElement[currentPosition].style.border = "1px solid red";
-            currentPosition += 1;
+        let positionX = cellElement.indexOf(event.currentTarget);
+        let positionY = this.parentNode.getElementsByClassName('char')[0].innerHTML-1;// getting position by div with class "char"
+        if(ship1.direction == 'horizontal'){
+            if(cellElement.length - positionX >= ship1.numOfCells){
+                for(let i = 0; i < ship1.numOfCells; i++){
+                    cellElement[positionX].style.border = "1px solid red";
+                    positionX += 1;
+                }
+            }
+            
+        } else {
+            if(cellElement.length - positionY >= ship1.numOfCells){
+                positionX += 1; // since the count starts from 0 but we need to choose first element
+                for(let j = 0; j < ship1.numOfCells; j++){
+                    let targetElement = rowElement[positionY].children[positionX]; // First we choose the row then the cell in that row
+                    targetElement.style.border = "1px solid red";
+                    positionY += 1;
+                }
+            }
+            
         }
+
+
     }   
 }
 
-function borderOut(cellElement){
+function borderOut(cellElement, rowElement){
     return function (event){
-        let currentPosition = cellElement.indexOf(event.currentTarget);
-        for(let i = 0; i < ship1.numOfCells; i++){
-            cellElement[currentPosition].style.border = "1px solid white";
-            currentPosition += 1;
+        let positionX = cellElement.indexOf(event.currentTarget);
+        let positionY = this.parentNode.getElementsByClassName('char')[0].innerHTML-1;// getting position by div with class "char"
+
+        if(ship1.direction == 'horizontal'){
+            if(cellElement.length - positionX >= ship1.numOfCells){
+                for(let i = 0; i < ship1.numOfCells; i++){
+                    cellElement[positionX].style.border = "1px solid white";
+                    positionX += 1;
+                }
+            }
+        } else {
+            if(cellElement.length - positionY >= ship1.numOfCells){
+                positionX += 1; // since the count starts from 0 but we need to choose first element
+                for(let j = 0; j < ship1.numOfCells; j++){
+                    let targetElement = rowElement[positionY].children[positionX]; // First we choose the row then the cell in that row
+                    targetElement.style.border = "1px solid white";
+                    positionY += 1;
+                }
+            }
+            
         }
     }   
 }
-
 
 for(let row of boardRow){
     let cells = row.getElementsByClassName('cell');
     for(let elem of cells){
         let cellsArr = Array.from(cells);
 
-
-        elem.addEventListener('mouseout', borderOut(cellsArr));
-        elem.onmouseover = borderOver(cellsArr);
-        elem.ononmouseout = borderOut(cellsArr);
-
-        elem.onclick = fillBorder(cellsArr, borderOver(cellsArr));
+        elem.onmouseover = borderOver(cellsArr, boardRow);
+        elem.onmouseout = borderOut(cellsArr, boardRow);
+        elem.onclick = fillBorder(cellsArr, boardRow);
     }
 }
 
-function fillBorder(cells, element){
+function fillBorder(cellElement, rowElement){
     return function(event){
-        let currentPosition = cells.indexOf(event.currentTarget);
-        for(let i = 0; i < ship1.numOfCells; i++){
-            cells[currentPosition].style.backgroundColor = "red";
-            currentPosition += 1;
-        }
-        for(let row of boardRow){
-            let divArr = row.getElementsByClassName('cell');
-            for(let item of divArr){
-                item.onclick = null
-                item.onmouseover = null
-                item.onmouseout = null
+        let positionX = cellElement.indexOf(event.currentTarget);
+        let positionY = this.parentNode.getElementsByClassName('char')[0].innerHTML-1;// getting position by div with class "char"
+        console.log(cellElement.length - positionY >= ship1.numOfCells)
+        let firstPlayerBoard = gameBoard(ship1, [positionY,positionX]);// placing it in database
+        console.log(firstPlayerBoard.board)
+
+        if(ship1.direction == 'horizontal'){
+            if(cellElement.length - positionX >= ship1.numOfCells){
+                for(let i = 0; i < ship1.numOfCells; i++){
+                    cellElement[positionX].style.backgroundColor = "red";
+                    positionX += 1;
+                }
+                // removing events from cells
+                for(let row of boardRow){
+                    let divArr = row.getElementsByClassName('cell');
+                    for(let item of divArr){
+                        item.onclick = null
+                        item.onmouseover = null
+                        item.onmouseout = null
+                    }
+                }
             }
+            
+        } else {
+            if(cellElement.length - positionY >= ship1.numOfCells){
+                positionX += 1; // since the count starts from 0 but we need to choose first element
+                for(let j = 0; j < ship1.numOfCells; j++){
+                    let targetElement = rowElement[positionY].children[positionX]; // First we choose the row then the cell in that row
+                    targetElement.style.backgroundColor = "red";
+                    positionY += 1;
+                }
+
+                // removing events from cells
+                for(let row of boardRow){
+                    let divArr = row.getElementsByClassName('cell');
+                    for(let item of divArr){
+                        item.onclick = null
+                        item.onmouseover = null
+                        item.onmouseout = null
+                    }
+                }
+            }
+            
+            
         }
+
     }
 }
 

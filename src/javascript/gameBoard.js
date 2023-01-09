@@ -7,7 +7,7 @@ export const gameBoard = (shipPlayer, position) => {
     if(shipPlayer.direction == 'vertical'){
         for(let i = 0; i < shipPlayer.numOfCells; i++){
             // нужно чтобы shipPlayer.numOfCells пршелся от 0 до конца
-            // нужно проверять каждый селл на то что он ставится не не нулевое место(то есть не после конца массива)
+            // нужно проверять каждый селл на то что он ставится на не нулевое место(то есть не после конца массива)
             // проверка начинается с позиции j котрую мы выбираем, тоесть не всегда начинается с 0 
 
             let j = i + position[0]; // since it is vertical then only change the first value
@@ -30,7 +30,7 @@ export const gameBoard = (shipPlayer, position) => {
             // проверка начинается с позиции k котрую мы выбираем, тоесть не всегда начинается с 0 
 
             let j = position[0]; 
-            let k = i + position[1]; // since it is horizontal then only change the first value
+            let k = i + position[1]; // since it is horizontal then only change the second value
 
             if(board[j]?.[k] != null){
             // the operator ?. checks if board[j] is not null(if not it will check the board[j][k], the next level of arr)
