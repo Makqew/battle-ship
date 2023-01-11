@@ -24,6 +24,8 @@ import {player} from './player'
 // let nameOfPlayer = prompt('give a name');
 // alert(nameOfPlayer);
 let ship1 = ship(3,0,false, 'horizontal')
+let ship2 = ship(3,0,false, 'vertical')
+
 // let player1 = player(nameOfPlayer,ship1,1)
 
 let playerBoard = document.getElementById('player');
@@ -99,51 +101,70 @@ function fillBorder(cellElement, rowElement){
         let positionX = cellElement.indexOf(event.currentTarget);
         let positionY = this.parentNode.getElementsByClassName('char')[0].innerHTML-1;// getting position by div with class "char"
 
-        let positionAxis = positionX;
         // console.log(cellElement.length - positionY >= ship1.numOfCells)
-        let firstPlayerBoard = gameBoard(ship1, [positionY,positionX]);// placing it in database
-        // console.log(firstPlayerBoard.board)
+        
+        // console.log(firstPlayerBoard)
+        console.log(ship1)
 
         if(ship1.direction == 'horizontal'){
-            positionAxis = positionX;
             if(cellElement.length - positionX >= ship1.numOfCells){// checking if the ship is fit into the board
                 for(let i = 0; i < ship1.numOfCells; i++){
                     cellElement[positionX].style.backgroundColor = "red";
                     positionX += 1;
                 }
-                // removing events from cells
-                for(let row of boardRow){
-                    let divArr = row.getElementsByClassName('cell');
-                    for(let item of divArr){
-                        item.onclick = null
-                        item.onmouseover = null
-                        item.onmouseout = null
-                    }
-                }
+                gameStart();
             }
-            
         } else {
-            positionAxis = positionY;
             if(cellElement.length - positionY >= ship1.numOfCells){// checking if the ship is fit into the board
                 positionX += 1; // since the count starts from 0 but we need to choose first element
                 for(let j = 0; j < ship1.numOfCells; j++){
                     rowElement[positionY].children[positionX].style.backgroundColor = "red";// First we choose the row then the cell in that row
                     positionY += 1;
                 }
-
-                // removing events from cells
-                for(let row of boardRow){
-                    let divArr = row.getElementsByClassName('cell');
-                    for(let item of divArr){
-                        item.onclick = null
-                        item.onmouseover = null
-                        item.onmouseout = null
-                    }
-                }
+                gameStart();
             }
             
             
         }
+
+        function gameStart(){
+            
+            // removing events from cells
+            for(let row of boardRow){
+                let divArr = row.getElementsByClassName('cell');
+                for(let item of divArr){
+                    item.onclick = oneCellBorder(divArr);
+                    item.onmouseover = null;
+                    item.onmouseout = null;
+                }
+            }
+
+            function oneCellBorder(cellElement){
+                return function(event){
+                    console.log(cellElement)
+                    let positionX = cellElement.indexOf(event.currentTarget);
+
+                    cellElement[positionX].style.border = "1px solid red";//need to attach it to second board
+                }
+            }
+
+            let firstPlayerBoard = gameBoard(ship1, [positionY,positionX]);// placing it in database
+            let secindlayerBoard = gameBoard(ship2, [0,0]);// placing it in manually
+            console.log(secindlayerBoard.board)
+
+
+            // starting the game
+            let i = 0;
+            do{
+                if(i%2 === 0 ){
+                    console.log('First')
+                } else{
+                    console.log('Second')
+                    ship1.hit();
+                }
+                i++;
+            }while(ship1.sunk == false)
+    }
 
     }
 }
