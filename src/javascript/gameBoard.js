@@ -7,20 +7,19 @@ export const gameBoard = (shipPlayer, position) => {
     if(shipPlayer.direction == 'vertical'){
         for(let i = 0; i < shipPlayer.numOfCells; i++){
             // нужно чтобы shipPlayer.numOfCells пршелся от 0 до конца
-            // нужно проверять каждый селл на то что он ставится на не нулевое место(то есть не после конца массива)
+            // нужно проверять каждый селл на то что он ставится на не нулевое место или не после конца массива
             // проверка начинается с позиции j котрую мы выбираем, тоесть не всегда начинается с 0 
 
             let j = i + position[0]; // since it is vertical then only change the first value
             let k = position[1];
 
             if(board[j]?.[k] != null){
-            // the operator ?. checks if board[j] is not null(if not it will check the board[j][k], the next level of arr)
-            // if it so then it will return undefined or null
-                board[j][k] = 1;
+            // operator "?." checks if "board[j]"(row) is not null(if not it will check the "board[j][k]" (every cell), the next level of arr)
+                board[j][k] = 1; //placing 1
             }
-            else{
+            else{// if it so then it will return undefined or null. OR too big in our case
                 tooBig = true;
-                i = shipPlayer.numOfCells
+                i = shipPlayer.numOfCells // goes to the end to stop the loop
             }
         }  
     }else {
@@ -33,13 +32,12 @@ export const gameBoard = (shipPlayer, position) => {
             let k = i + position[1]; // since it is horizontal then only change the second value
 
             if(board[j]?.[k] != null){
-            // the operator ?. checks if board[j] is not null(if not it will check the board[j][k], the next level of arr)
-            // if it so the it will return undefined or null
+            // the operator "?."" checks if "board[j]"(column) is not null(if not it will check the board[j][k], the next level of arr)
                 board[j][k] = 1;
             }
-            else{
+            else{// if it so then it will return undefined or null. OR too big in our case
                 tooBig = true;
-                i = shipPlayer.numOfCells
+                i = shipPlayer.numOfCells // goes to the end to stop the loop
             }
         }
     }
@@ -49,12 +47,12 @@ export const gameBoard = (shipPlayer, position) => {
     const receiveAttack = (x, y) => {
         let hitted = false;
 
-        // checking if the coordinates was already been hitted
+        // checking if the coordinates was already been the ones that hitted
         for(let i = 0; i < history.length; i++){
-            if(history[i][0] == x && history[0][1] == y){ hitted = true; }
+            if(history[i][0] == x && history[i][1] == y){ hitted = true; }
         }
 
-        // checkin if not hitted before or this is the first time
+        // checkin if there was not hitted coordinates before or this is the first time
         if(hitted == false || history.length == 0){
             if(board[x][y] == 1){
                 shipPlayer.hit();

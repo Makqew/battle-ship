@@ -24,7 +24,7 @@ describe('GameBoard placement', () => {
     test('Placement vertical ship',() => {
         expect(board1.board).toStrictEqual([['o', 'o', 'o', 'o'],['o', 'o', 'o', 'o'],[1, 'o', 'o', 'o'],[1, 'o', 'o', 'o']])
     })
-    test('Anappropriate placing of vertical ship', () => {
+    test('An appropriate placing of vertical ship', () => {
         expect(board1.getTooBig()).toBe(true)
     })
 
