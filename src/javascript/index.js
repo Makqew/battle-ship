@@ -26,13 +26,37 @@ import {player} from './player'
 // let nameOfPlayer = prompt('give a name');
 // alert(nameOfPlayer);
 let ship1 = ship(3,0,false, 'vertical');
-let ship2 = ship(3,0,false, 'vertical');
+let ship2 = ship(3,0,false, 'horizontal');
 
 // let player1 = player(nameOfPlayer,ship1,1)
 
 let playerBoard = document.getElementById('player');
-let boardRow = playerBoard.getElementsByClassName('row');
+let playerBoardRow = playerBoard.getElementsByClassName('row');
 
+
+let computerBoard = document.getElementById('computer');
+let computerBoardRow = computerBoard.getElementsByClassName('row');
+//after game starts
+//to border over one cell
+function oneCellOver(cellElement){
+    return function(event){
+        console.log(cellElement)
+        let positionX = cellElement.indexOf(event.currentTarget);
+
+        cellElement[positionX].style.border = "1px solid red";//need to attach it to second board
+    }
+}
+
+function oneCellOut(cellElement){
+    return function(event){
+        console.log(cellElement)
+        let positionX = cellElement.indexOf(event.currentTarget);
+
+        cellElement[positionX].style.border = "1px solid white";//need to attach it to second board
+    }
+}
+
+//before game starts
 //to show the cell placement prototype
 const borderOver = (cellElement, rowElement) => {
     return function (event){
@@ -72,7 +96,7 @@ function borderOut(cellElement, rowElement){
             if(cellElement.length - positionX >= ship1.numOfCells){// checking if the ship is fit into the board
                 for(let i = 0; i < ship1.numOfCells; i++){
                     cellElement[positionX].style.border = "1px solid white";
-                    positionX += 1;
+                    positionX +=  1;
                 }
             }
         } else {
@@ -128,28 +152,26 @@ function fillBorder(cellElement, rowElement){
 
         function gameStart(){
             
-            // removing events from cells
-            for(let row of boardRow){
+            // removing events from playerBoard cells
+            for(let row of playerBoardRow){
                 let divArr = row.getElementsByClassName('cell');
                 for(let item of divArr){
-                    // item.onclick = oneCellBorder(divArr);
                     item.onmouseover = null;
                     item.onmouseout = null;
                 }
             }
-            // DONT NEED THAT???
-            // function oneCellBorder(cellElement){
-            //     return function(event){
-            //         console.log(cellElement)
-            //         let positionX = cellElement.indexOf(event.currentTarget);
+            for(let row of computerBoardRow){
+                let divArr = row.getElementsByClassName('cell');
+                for(let item of divArr){
+                    item.onmouseover = oneCellOver(Array.from(divArr));
+                    item.onmouseout = oneCellOut(Array.from(divArr))
+                }
+            }
 
-            //         cellElement[positionX].style.border = "1px solid red";//need to attach it to second board
-            //     }
-            // }
 
             let firstPlayerBoard = gameBoard(ship1, [positionY,positionX]);// placing it in database
-            let secondPlayerBoard = gameBoard(ship2, [0,0]);// placing it in manually
-            console.log("X:"+ positionX + ", " + "Y:" + positionY)
+            let secondPlayerBoard = gameBoard(ship2, [1,0]);// placing it in manually
+            console.log("Y:" + positionY + ", " + "X:"+ positionX)
             console.log(firstPlayerBoard.board)
             console.log(secondPlayerBoard.board)
 
@@ -171,14 +193,14 @@ function fillBorder(cellElement, rowElement){
 }
 
 // setting events on each cell
-for(let row of boardRow){
+for(let row of playerBoardRow){
     let cells = row.getElementsByClassName('cell'); //get every cell from every row
     for(let elem of cells){
         let cellsArr = Array.from(cells);
 
-        elem.onmouseover = borderOver(cellsArr, boardRow);
-        elem.onmouseout = borderOut(cellsArr, boardRow);
-        elem.onclick = fillBorder(cellsArr, boardRow);
+        elem.onmouseover = borderOver(cellsArr, playerBoardRow);
+        elem.onmouseout = borderOut(cellsArr, playerBoardRow);
+        elem.onclick = fillBorder(cellsArr, playerBoardRow);
     }
 }
 
