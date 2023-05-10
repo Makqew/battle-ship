@@ -1,7 +1,7 @@
 export const ship = (numOfCells, numOfHits, sunk, direction) => {
     const hit = () => {
-        numOfHits += 1
-        isSunk()
+        numOfHits += 1;
+        isSunk();
     }
     const isSunk = () => {
         if(numOfHits >= numOfCells){

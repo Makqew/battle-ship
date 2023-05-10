@@ -25,6 +25,8 @@ import {player} from './player'
 
 // let nameOfPlayer = prompt('give a name');
 // alert(nameOfPlayer);
+
+let i = 0; //orede
 let ship1 = ship(3,0,false, 'vertical');
 let ship2 = ship(3,0,false, 'horizontal');
 
@@ -36,23 +38,76 @@ let playerBoardRow = playerBoard.getElementsByClassName('row');
 
 let computerBoard = document.getElementById('computer');
 let computerBoardRow = computerBoard.getElementsByClassName('row');
+
+function gameStart(x, y){
+    let firstPlayerBoard = gameBoard(ship1, [y, x]);// placing it in database
+    let secondPlayerBoard = gameBoard(ship2, [1,0]);// placing it in manually
+    console.log("Y:" + y + ", " + "X:"+ x)
+    console.log(firstPlayerBoard.board)
+    console.log(secondPlayerBoard.board)
+
+    // removing events from playerBoard cells
+    for(let row of playerBoardRow){
+        let divArr = row.getElementsByClassName('cell');
+        for(let item of divArr){
+            item.onmouseover = null;
+            item.onmouseout = null;
+        }
+    }
+    for(let row of computerBoardRow){
+        let divArr = row.getElementsByClassName('cell');
+        for(let item of divArr){
+            item.onmouseover = oneCellOver(Array.from(divArr));
+            item.onmouseout = oneCellOut(Array.from(divArr));
+            item.onclick = oneCellFill(Array.from(divArr), secondPlayerBoard);
+        }
+    }
+}
+
 //after game starts
 //to border over one cell
 function oneCellOver(cellElement){
     return function(event){
-        console.log(cellElement)
         let positionX = cellElement.indexOf(event.currentTarget);
-
         cellElement[positionX].style.border = "1px solid red";//need to attach it to second board
     }
 }
 
 function oneCellOut(cellElement){
     return function(event){
-        console.log(cellElement)
         let positionX = cellElement.indexOf(event.currentTarget);
-
         cellElement[positionX].style.border = "1px solid white";//need to attach it to second board
+    }
+}
+
+function oneCellFill(cellElement, playerVal){ // THERE IS THE PROBLEM
+    return function(event){
+        let positionX = cellElement.indexOf(event.currentTarget);
+        let positionY = this.parentNode.getElementsByClassName('char')[0].innerHTML-1;
+        
+        if(playerVal.board[positionX][positionY] == 1){
+            console.log("hit");
+            cellElement[positionX].innerHTML = "X";
+            // ship1.hit();
+            playerVal.receiveAttack(positionX, positionY);
+
+        } else{
+            console.log("miss")
+            cellElement[positionX].innerHTML = "•";
+
+        }
+        cellElement[positionX].style.backgroundColor = "red";
+        
+        // starting the game
+        do{
+            if(i%2 === 0 ){
+                console.log('First')
+            } else{
+                console.log('Second')
+            }
+
+        }while(ship1.sunk == true || ship2.sunk == true || i == 16);
+        i++;
     }
 }
 
@@ -116,7 +171,6 @@ function borderOut(cellElement, rowElement){
 //placing the ship
 function fillBorder(cellElement, rowElement){
     return function(event){
-        console.log("cellElement:")
         let positionX = cellElement.indexOf(event.currentTarget);
         let positionY = this.parentNode.getElementsByClassName('char')[0].innerHTML-1;// getting position by div with class "char"
 
@@ -135,7 +189,7 @@ function fillBorder(cellElement, rowElement){
                     cellElement[counterX].style.backgroundColor = "red";
                     counterX += 1;
                 }
-                gameStart();
+                gameStart(positionX, positionY);
             }
         } else {
             if(cellElement.length - positionY >= ship1.numOfCells){// checking if the ship is fit into the board BY Y
@@ -144,50 +198,13 @@ function fillBorder(cellElement, rowElement){
                     rowElement[counterY].children[counterX].style.backgroundColor = "red";// First we choose the row then the cell in that row
                     counterY += 1;
                 }
-                gameStart();
+                gameStart(positionX, positionY);
             }
             
             
         }
 
-        function gameStart(){
-            
-            // removing events from playerBoard cells
-            for(let row of playerBoardRow){
-                let divArr = row.getElementsByClassName('cell');
-                for(let item of divArr){
-                    item.onmouseover = null;
-                    item.onmouseout = null;
-                }
-            }
-            for(let row of computerBoardRow){
-                let divArr = row.getElementsByClassName('cell');
-                for(let item of divArr){
-                    item.onmouseover = oneCellOver(Array.from(divArr));
-                    item.onmouseout = oneCellOut(Array.from(divArr))
-                }
-            }
-
-
-            let firstPlayerBoard = gameBoard(ship1, [positionY,positionX]);// placing it in database
-            let secondPlayerBoard = gameBoard(ship2, [1,0]);// placing it in manually
-            console.log("Y:" + positionY + ", " + "X:"+ positionX)
-            console.log(firstPlayerBoard.board)
-            console.log(secondPlayerBoard.board)
-
-
-            // starting the game
-            let i = 0;
-            do{
-                if(i%2 === 0 ){
-                    console.log('First')
-                } else{
-                    console.log('Second')
-                    ship1.hit();
-                }
-                i++;
-            }while(ship1.sunk == false)
-        }
+        
 
     }
 }
