@@ -2,31 +2,7 @@ import {gameBoard} from './gameBoard'
 import {ship} from './ship'
 import {player} from './player'
 
-
-//CREATING THE GAMEBOARD DYNAMICALLY
-// let cell = document.createElement('div');
-// cell.classList.add('cell');
-
-// let row = document.createElement('div');
-// row.classList.add('row');
-
-// let column = document.createElement('div');
-// column.classList.add('column');
-
-// for(let i = 0; i < 4; i++){
-//     for(let j = 0; j < 4; j++){
-//         row.appendChild(cell)
-//     }
-//     column.appendChild(row)
-// }
-
-// let main = document.querySelector('#player1');
-// main.appendChild(column)
-
-// let nameOfPlayer = prompt('give a name');
-// alert(nameOfPlayer);
-
-let i = 0; //orede
+let i = 0; //order
 let ship1 = ship(3,0,false, 'vertical');
 let ship2 = ship(3,0,false, 'horizontal');
 
@@ -39,27 +15,83 @@ let playerBoardRow = playerBoard.getElementsByClassName('row');
 let computerBoard = document.getElementById('computer');
 let computerBoardRow = computerBoard.getElementsByClassName('row');
 
-function gameStart(x, y){
-    let firstPlayerBoard = gameBoard(ship1, [y, x]);// placing it in database
-    let secondPlayerBoard = gameBoard(ship2, [1,0]);// placing it in manually
-    console.log("Y:" + y + ", " + "X:"+ x)
-    console.log(firstPlayerBoard.board)
-    console.log(secondPlayerBoard.board)
+let firstPlayerBoard = [];
+let secondPlayerBoard = [];
 
-    // removing events from playerBoard cells
-    for(let row of playerBoardRow){
-        let divArr = row.getElementsByClassName('cell');
-        for(let item of divArr){
-            item.onmouseover = null;
-            item.onmouseout = null;
+function order(){
+    // starting the game
+    console.log('Starting the game')
+    if(ship1.sunk == false && ship2.sunk == false){
+        if(i%2 === 0 ){
+            console.log('First')
+            // placing events on the first board
+            for(let row of playerBoardRow){
+                let divArr = row.getElementsByClassName('cell');
+                for(let item of divArr){
+                    item.onmouseover = oneCellOver(Array.from(divArr));
+                    item.onmouseout = oneCellOut(Array.from(divArr));
+                    item.onclick = oneCellFill(Array.from(divArr), firstPlayerBoard);
+                }
+            }
+            //removing events from the second board
+            for(let row of computerBoardRow){
+                let divArr = row.getElementsByClassName('cell');
+                for(let item of divArr){
+                    item.onmouseover = null;
+                    item.onmouseout = null;
+                    item.onclick = null;
+                }
+            }
+            if(ship2.sunk == true){
+                alert('Player1 wins')
+            }
+            i++;
+            
+        } else{
+            console.log('Second')
+            
+            // placing events on the second board
+            for(let row of computerBoardRow){
+                let divArr = row.getElementsByClassName('cell');
+                for(let item of divArr){
+                    item.onmouseover = oneCellOver(Array.from(divArr));
+                    item.onmouseout = oneCellOut(Array.from(divArr));
+                    item.onclick = oneCellFill(Array.from(divArr), secondPlayerBoard);
+                }
+            }
+            //removing events from the first board
+            for(let row of playerBoardRow){
+                let divArr = row.getElementsByClassName('cell');
+                for(let item of divArr){
+                    item.onmouseover = null;
+                    item.onmouseout = null;
+                    item.onclick = null;
+                }
+            }
+            if(ship1.sunk == true){
+                alert('Player2 wins')
+            }
+            i++;
         }
-    }
-    for(let row of computerBoardRow){
-        let divArr = row.getElementsByClassName('cell');
-        for(let item of divArr){
-            item.onmouseover = oneCellOver(Array.from(divArr));
-            item.onmouseout = oneCellOut(Array.from(divArr));
-            item.onclick = oneCellFill(Array.from(divArr), secondPlayerBoard);
+    }else{
+        //removing events from the first board
+        for(let row of playerBoardRow){
+            let divArr = row.getElementsByClassName('cell');
+            for(let item of divArr){
+                item.onmouseover = null;
+                item.onmouseout = null;
+                item.onclick = null;
+            }
+        }
+
+        //removing events from the second board
+        for(let row of computerBoardRow){
+            let divArr = row.getElementsByClassName('cell');
+            for(let item of divArr){
+                item.onmouseover = null;
+                item.onmouseout = null;
+                item.onclick = null;
+            }
         }
     }
 }
@@ -80,7 +112,7 @@ function oneCellOut(cellElement){
     }
 }
 
-function oneCellFill(cellElement, playerVal){ // THERE IS THE PROBLEM
+function oneCellFill(cellElement, playerVal){
     return function(event){
         let positionX = cellElement.indexOf(event.currentTarget);
         let positionY = this.parentNode.getElementsByClassName('char')[0].innerHTML-1;
@@ -88,26 +120,27 @@ function oneCellFill(cellElement, playerVal){ // THERE IS THE PROBLEM
         if(playerVal.board[positionX][positionY] == 1){
             console.log("hit");
             cellElement[positionX].innerHTML = "X";
-            // ship1.hit();
-            playerVal.receiveAttack(positionX, positionY);
 
+            playerVal.receiveAttack(positionX, positionY);
+            console.log(playerVal.board);
+            // console.log(ship2.numOfHits)
+            // console.log(ship2.sunk)
         } else{
             console.log("miss")
             cellElement[positionX].innerHTML = "•";
 
         }
         cellElement[positionX].style.backgroundColor = "red";
+        console.log("X:"+ positionX);
+        console.log("Y:" + positionY)
+        console.log(cellElement)
+        if(ship1.sunk == true){
+            alert('Player2 is the winner')
+        }else if(ship2.sunk == true){
+            alert('Player1 is the winner');
+        }
         
-        // starting the game
-        do{
-            if(i%2 === 0 ){
-                console.log('First')
-            } else{
-                console.log('Second')
-            }
-
-        }while(ship1.sunk == true || ship2.sunk == true || i == 16);
-        i++;
+        order();
     }
 }
 
@@ -198,14 +231,32 @@ function fillBorder(cellElement, rowElement){
                     rowElement[counterY].children[counterX].style.backgroundColor = "red";// First we choose the row then the cell in that row
                     counterY += 1;
                 }
-                gameStart(positionX, positionY);
-            }
-            
-            
+                // gameStart(positionX, positionY);
+                firstPlayerBoard = gameBoard(ship1, [positionY, positionX]);// placing it in database
+                secondPlayerBoard = gameBoard(ship2, [1,0]);// placing it in manually
+                console.log("Y:" + positionY + ", " + "X:"+ positionX)
+                console.log(firstPlayerBoard.board)
+                console.log(secondPlayerBoard.board)
+
+                // removing initial events from playerBoard cells
+                for(let row of playerBoardRow){
+                    let divArr = row.getElementsByClassName('cell');
+                    for(let item of divArr){
+                        item.onmouseover = null;
+                        item.onmouseout = null;
+                        item.onclick = null;
+                    }
+                }
+                for(let row of computerBoardRow){
+                    let divArr = row.getElementsByClassName('cell');
+                    for(let item of divArr){
+                        item.onmouseover = oneCellOver(Array.from(divArr));
+                        item.onmouseout = oneCellOut(Array.from(divArr));
+                        item.onclick = oneCellFill(Array.from(divArr), secondPlayerBoard);
+                    }
+                }
+            }   
         }
-
-        
-
     }
 }
 
@@ -223,8 +274,15 @@ for(let row of playerBoardRow){
 
 
 
-// 1. Расставление по очереди
-// 2. Выбор ячейки для поподания
-// 3. Проверка на поподание
-// 4. Изменение вида ячйек
+// 1. Расставление по очереди +
+// 2. Выбор ячейки для поподания +
+// 3. Проверка на поподание +
+// 4. Изменение вида ячйек +
 // 5. Конец игры при уничтожении
+
+// 1. Очередность
+// 2. Нужно понять как менять очередность динамически и при клике на ячейку, 
+// сейчас проблема в том что ты вызываешь поочередность только один раз.
+// нужно вызывать ее при срабатывании функции oneCellFill
+
+// неправильно сравнение x и • на первой доске
