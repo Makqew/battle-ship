@@ -54,14 +54,14 @@ export const gameBoard = (shipPlayer, position) => {
 
         // checkin if there was not hitted coordinates before or this is the first time
         if(hitted == false || history.length == 0){
-            if(board[x][y] == 1){
+            if(board[y][x] == 1){
                 shipPlayer.hit();
             } else{
                 console.log('Miss')
             }
             // save used coordinates 
-            history.push(x,y);
-            board[x][y] = 'x'
+            history.push(y,x);
+            board[y][x] = 'x'
         }
         else{
             console.log('Already hitted here, choose another coordinates');

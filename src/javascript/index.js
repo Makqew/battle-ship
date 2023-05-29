@@ -2,11 +2,15 @@ import {gameBoard} from './gameBoard'
 import {ship} from './ship'
 import {player} from './player'
 
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+console.log(getRandomInt(3))
+
 let i = 0; //order
 let ship1 = ship(3,0,false, 'vertical');
 let ship2 = ship(3,0,false, 'horizontal');
 
-// let player1 = player(nameOfPlayer,ship1,1)
 
 let playerBoard = document.getElementById('player');
 let playerBoardRow = playerBoard.getElementsByClassName('row');
@@ -14,6 +18,8 @@ let playerBoardRow = playerBoard.getElementsByClassName('row');
 
 let computerBoard = document.getElementById('computer');
 let computerBoardRow = computerBoard.getElementsByClassName('row');
+
+
 
 let firstPlayerBoard = [];
 let secondPlayerBoard = [];
@@ -42,6 +48,8 @@ function order(){
                     item.onclick = null;
                 }
             }
+
+
             if(ship2.sunk == true){
                 alert('Player1 wins')
             }
@@ -51,14 +59,14 @@ function order(){
             console.log('Second')
             
             // placing events on the second board
-            for(let row of computerBoardRow){
-                let divArr = row.getElementsByClassName('cell');
-                for(let item of divArr){
-                    item.onmouseover = oneCellOver(Array.from(divArr));
-                    item.onmouseout = oneCellOut(Array.from(divArr));
-                    item.onclick = oneCellFill(Array.from(divArr), secondPlayerBoard);
-                }
-            }
+            // for(let row of computerBoardRow){
+            //     let divArr = row.getElementsByClassName('cell');
+            //     for(let item of divArr){
+            //         item.onmouseover = oneCellOver(Array.from(divArr));
+            //         item.onmouseout = oneCellOut(Array.from(divArr));
+            //         item.onclick = oneCellFill(Array.from(divArr), secondPlayerBoard);
+            //     }
+            // }
             //removing events from the first board
             for(let row of playerBoardRow){
                 let divArr = row.getElementsByClassName('cell');
@@ -117,14 +125,12 @@ function oneCellFill(cellElement, playerVal){
         let positionX = cellElement.indexOf(event.currentTarget);
         let positionY = this.parentNode.getElementsByClassName('char')[0].innerHTML-1;
         
-        if(playerVal.board[positionX][positionY] == 1){
+        if(playerVal.board[positionY][positionX] == 1){
             console.log("hit");
             cellElement[positionX].innerHTML = "X";
 
             playerVal.receiveAttack(positionX, positionY);
             console.log(playerVal.board);
-            // console.log(ship2.numOfHits)
-            // console.log(ship2.sunk)
         } else{
             console.log("miss")
             cellElement[positionX].innerHTML = "•";
@@ -134,6 +140,7 @@ function oneCellFill(cellElement, playerVal){
         console.log("X:"+ positionX);
         console.log("Y:" + positionY)
         console.log(cellElement)
+        console.log("this is: " + this.parentNode.getElementsByClassName('char')[0].innerHTML-1);
         if(ship1.sunk == true){
             alert('Player2 is the winner')
         }else if(ship2.sunk == true){
